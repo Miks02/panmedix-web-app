@@ -1,7 +1,7 @@
 
 
 
-<header class="sticky top-0 z-50 bg-gradient-to-br from-cyan-500 to-cyan-600 shadow-xl hover:shadow-2xl transition duration-200">
+<header class="h-[8vh] sticky top-0 z-50 bg-gradient-to-br from-cyan-500 to-cyan-600 shadow-xl hover:shadow-2xl transition duration-200">
     <div class="container mx-auto px-4 py-4 flex items-center justify-between">
         <div class="flex-1">
             <h1 class="text-2xl font-bold text-amber-100">PanMedix D.O.O</h1>
@@ -29,14 +29,13 @@
                 <i class="fa-solid fa-user mr-2"></i>Prijava
             </a>
             
-            <!-- Hamburger Button -->
             <button id="mobile-menu-button" class="md:hidden text-amber-100 text-3xl focus:outline-none hover:text-white transition duration-200">
                 <i class="fa-solid fa-bars"></i>
             </button>
         </div>
     </div>
 
-    <div id="mobile-menu" class="max-h-0 overflow-hidden md:hidden bg-cyan-600 border-t border-cyan-400 transition-all duration-300 ease-in-out">
+    <div id="mobile-menu" class="max-h-0 overflow-hidden md:hidden bg-cyan-600 transition-all duration-300 ease-in-out">
         <ul class="flex flex-col p-4 space-y-6">
             <li>
                 <a asp-controller="Home" asp-action="Index" 
