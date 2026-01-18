@@ -11,15 +11,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.AddIdentity<User, IdentityRole>(Options =>
+builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
-
-    Options.User.RequireUniqueEmail = true;
-    Options.Password.RequiredLength = 6;
-    Options.Password.RequireNonAlphanumeric = false;
-    Options.Password.RequireDigit = true;
-    Options.Password.RequireLowercase = true;
-    Options.Password.RequireUppercase = false;
+    options.User.RequireUniqueEmail = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = false;
 
 }).AddEntityFrameworkStores<AppDbContext>();
 
