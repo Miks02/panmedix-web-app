@@ -273,7 +273,6 @@ namespace PanMedix.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GuardianId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("IsGuardianApproved")
@@ -417,8 +416,7 @@ namespace PanMedix.Migrations
                     b.HasOne("PanMedix.Models.User", "Guardian")
                         .WithMany("Patients")
                         .HasForeignKey("GuardianId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Guardian");
                 });

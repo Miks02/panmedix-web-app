@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PanMedix.Data.EntityFramework;
 using PanMedix.Models;
+using PanMedix.Services.Implementations;
+using PanMedix.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,11 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     options.Password.RequireUppercase = false;
 
 }).AddEntityFrameworkStores<AppDbContext>();
+
+builder.Services
+    .AddScoped<IRoleService, RoleService>()
+    .AddScoped<IUserService, UserService>()
+    .AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddControllersWithViews();
 
