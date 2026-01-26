@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Identity;
 using PanMedix.Enums;
+using PanMedix.Exceptions.Global;
 using PanMedix.Exceptions.User;
 using PanMedix.Models;
 using PanMedix.Services.Interfaces;
@@ -40,6 +41,22 @@ public class AuthService : IAuthService
 
     public async Task LoginAsync(LoginViewModel request)
     {
-        throw new NotImplementedException();
+        var user = await _userService.GetUserByEmailAsync(request.Email);
+
+        if (user is null)
+            throw new InvalidOperationException("Korisničko ime ili lozinka nisu tačni");
+
+        var isPasswordValid = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
+        
+        if(!isPasswordValid.Succeeded)
+            throw new InvalidOperationException("Korisničko ime ili lozinka nisu tačni");
+
+        await _signInManager.SignInAsync(user, isPersistent: false);
+
+    }
+
+    public async Task LogoutAsync()
+    {
+        await _signInManager.SignOutAsync();
     }
 }
