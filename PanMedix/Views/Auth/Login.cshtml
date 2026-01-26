@@ -1,0 +1,62 @@
+@using PanMedix.ViewModels
+
+@model LoginViewModel
+
+@{
+    ViewBag.Title = "Prijava";
+    Layout = "_Layout";
+}
+
+<div class="container mx-auto px-4 py-12 md:py-24 min-h-[92vh] flex items-center justify-center">
+    <div class="bg-white/70 backdrop-blur-md p-8 md:p-12 rounded-3xl shadow-2xl w-full max-w-md border border-white/50">
+        <div class="text-center mb-10">
+            <div class="bg-cyan-100 rounded-full px-4 py-2 w-fit border border-cyan-400 mx-auto mb-4">
+                <p class="text-cyan-800 uppercase text-xs font-bold tracking-wider">Dobrodošli nazad</p>
+            </div>
+            <h1 class="text-4xl font-bold text-slate-800 mb-2">Prijavite se</h1>
+        </div>
+
+        @using (Html.BeginForm("Login", "Auth", FormMethod.Post, new { @class = "flex flex-col gap-6", novalidate = "novalidate" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="flex flex-col gap-2">
+                @Html.LabelFor(m => m.Email, "E-mail adresa", new {@class = "text-sm font-semibold text-slate-700 ml-1"})
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    @Html.TextBoxFor(m => m.Email, new { @class = "w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition-all", placeholder = "ime@primjer.com", type = "email" })
+                </div>
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-red-500 text-xs mt-1 ml-1" })
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between items-center ml-1">
+                    @Html.LabelFor(m => m.Password, "Lozinka", new {@class = "text-sm font-semibold text-slate-700 ml-1"})
+                    <a href="#" class="text-xs font-bold text-cyan-600 hover:text-cyan-700 transition-colors">Zaboravljena lozinka?</a>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    @Html.PasswordFor(m => m.Password, new { @class = "w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition-all", placeholder = "••••••••" })
+                </div>
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-red-500 text-xs mt-1 ml-1" })
+            </div>
+
+            <button type="submit" class="w-full py-4 bg-cyan-400 text-slate-700 rounded-xl font-bold hover:bg-cyan-500 transition-all shadow-lg hover:shadow-cyan-200 hover:-translate-y-0.5 mt-2">
+                <i class="fa-solid fa-right-to-bracket mr-2"></i>Prijavi se
+            </button>
+        }
+
+        <div class="mt-8 pt-8 border-t border-slate-200 text-center">
+            <p class="text-slate-600">
+                Nemate nalog? 
+                <a href="@Url.Action("Register", "Auth")" class="font-bold text-cyan-600 hover:text-cyan-700 transition-colors ml-1">Registrujte se</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+

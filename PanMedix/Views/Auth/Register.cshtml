@@ -1,0 +1,103 @@
+@using PanMedix.ViewModels
+
+@model RegisterViewModel
+
+@{
+    ViewBag.Title = "Registracija";
+    Layout = "_Layout";
+}
+
+<div class="container mx-auto px-4 py-8  min-h-[92vh] flex items-center justify-center">
+    <div class="bg-white/70 backdrop-blur-md p-8 md:p-10 rounded-3xl shadow-2xl w-full max-w-2xl border border-white/50">
+        <div class="text-center mb-8">
+            <div class="bg-cyan-100 rounded-full px-4 py-2 w-fit border border-cyan-400 mx-auto mb-4">
+                <p class="text-cyan-800 uppercase text-xs font-bold tracking-wider">Pridružite nam se</p>
+            </div>
+            <h1 class="text-4xl font-bold text-slate-800 mb-2">Kreirajte nalog</h1>
+        </div>
+
+        @using (Html.BeginForm("Register", "Auth", FormMethod.Post, new { @class = "flex flex-col gap-5", novalidate = "novalidate" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="flex flex-col gap-2">
+                    @Html.LabelFor(m => m.FirstName, "Ime", new { @class = "text-sm font-semibold text-slate-700 ml-1" })
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition-all", placeholder = "Vaše ime" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-red-500 text-xs mt-1 ml-1" })
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    @Html.LabelFor(m => m.LastName, "Prezime", new { @class = "text-sm font-semibold text-slate-700 ml-1" })
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition-all", placeholder = "Vaše prezime" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-red-500 text-xs mt-1 ml-1" })
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                @Html.LabelFor(m => m.Email, "E-mail adresa", new { @class = "text-sm font-semibold text-slate-700 ml-1" })
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    @Html.TextBoxFor(m => m.Email, new { @class = "w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition-all", placeholder = "ime@primer.com", type = "email" })
+                </div>
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-red-500 text-xs mt-1 ml-1" })
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="flex flex-col gap-2">
+                    @Html.LabelFor(m => m.Password, "Lozinka", new { @class = "text-sm font-semibold text-slate-700 ml-1" })
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-lock"></i>
+                        </div>
+                        @Html.PasswordFor(m => m.Password, new { @class = "w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition-all", placeholder = "••••••••" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-red-500 text-xs mt-1 ml-1" })
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    @Html.LabelFor(m => m.ConfirmPassword, "Potvrda lozinke", new { @class = "text-sm font-semibold text-slate-700 ml-1" })
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition-all", placeholder = "••••••••" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-red-500 text-xs mt-1 ml-1" })
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 py-2 px-1">
+                <div class="relative flex items-center">
+                    @Html.CheckBoxFor(m => m.IsGuardian, new { @class = "w-5 h-5 text-cyan-500 border-slate-300 rounded focus:ring-cyan-400 accent-cyan-400 cursor-pointer" })
+                </div>
+                @Html.LabelFor(m => m.IsGuardian, "Registruj se kao staratelj", new { @class = "text-sm font-medium text-slate-700 cursor-pointer" })
+            </div>
+
+            <button type="submit" class="w-full py-4 bg-cyan-400 text-slate-700 rounded-xl font-bold hover:bg-cyan-500 transition-all shadow-lg hover:shadow-cyan-200 hover:-translate-y-0.5 mt-2">
+                <i class="fa-solid fa-user-plus mr-2"></i>Registrujte se
+            </button>
+        }
+
+        <div class="mt-8 pt-8 border-t border-slate-200 text-center">
+            <p class="text-slate-600">
+                Već imate nalog? 
+                <a asp-action="Register" asp-controller="Auth" class="font-bold text-cyan-600 hover:text-cyan-700 transition-colors ml-1">Prijavite se</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+
