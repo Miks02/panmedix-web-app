@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PanMedix.Data.EntityFramework;
+using PanMedix.Helpers;
 using PanMedix.Models;
 using PanMedix.Services.Implementations;
 using PanMedix.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -45,6 +45,8 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+await Seeder.SeedAdmin(app.Services);
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
