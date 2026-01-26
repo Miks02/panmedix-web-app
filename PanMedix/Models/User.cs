@@ -8,8 +8,8 @@ namespace PanMedix.Models
 
         public string LastName { get; set; } = null!;
 
-        public string GuardianId { get; set; } = null!;
-        public User Guardian { get; set; } = null!;
+        public string? GuardianId { get; set; }
+        public User? Guardian { get; set; }
 
         public bool IsGuardianApproved { get; set; }
 
