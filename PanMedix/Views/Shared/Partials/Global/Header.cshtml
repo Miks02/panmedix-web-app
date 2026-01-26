@@ -1,4 +1,10 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager;
 
+@{
+    var isAuthenticated = SignInManager.IsSignedIn(User);
+    var isAdmin = User.IsInRole("Admin");
+}
 
 
 <header class="h-[8vh] sticky top-0 z-50 bg-gradient-to-br from-cyan-500 to-cyan-600 shadow-xl hover:shadow-2xl transition duration-200">
@@ -23,16 +29,48 @@
                 </li>
             </ul>
         </nav>
-
+        
         <div class="flex-1 flex items-center justify-end space-x-4">
-            <a asp-controller="Auth" asp-action="Login" class="hidden md:inline-block rounded-md shadow-md font-semibold bg-amber-600 px-4 py-2 text-cyan-100 hover:bg-amber-700 transition-all duration-200">
-                <i class="fa-solid fa-user mr-2"></i>Prijava
-            </a>
+            
+            @if (isAdmin)
+            {
+                <a asp-controller="Auth" asp-action="Login" class="hidden md:inline-block rounded-md shadow-md font-semibold bg-amber-600 px-4 py-2 text-cyan-100 hover:bg-amber-700 transition-all duration-200">
+                    <i class="fa-solid fa-user mr-2"></i>Administracija
+                </a>
+            }
+            else if(isAuthenticated)
+            {
+                <a asp-controller="Auth" asp-action="Login" class="hidden md:inline-block rounded-md shadow-md font-semibold bg-amber-600 px-4 py-2 text-cyan-100 hover:bg-amber-700 transition-all duration-200">
+                    <i class="fa-solid fa-user mr-2"></i>Profil
+                </a>
+            }
+            
+            @if (!isAuthenticated)
+            {
+                <a asp-controller="Auth" asp-action="Login" class="hidden md:inline-block rounded-md shadow-md font-semibold bg-amber-600 px-4 py-2 text-cyan-100 hover:bg-amber-700 transition-all duration-200">
+                    <i class="fa-solid fa-user mr-2"></i>Prijava
+                </a>
+            }
+            else
+            {
+                <form asp-action="Logout" asp-controller="Auth" method="post">
+                    <button type="submit" class="hidden md:inline-block rounded-md shadow-md font-semibold bg-red-600 px-4 py-2 text-cyan-100 hover:bg-red-700 transition-all duration-200">
+                        <i class="fa-solid fa-user mr-2"></i>Odjava
+                    </button>
+                </form>
+            }
+
+            
+            
             
             <button id="mobile-menu-button" class="md:hidden text-amber-100 text-3xl focus:outline-none hover:text-white transition duration-200">
                 <i class="fa-solid fa-bars"></i>
             </button>
         </div>
+        
+        
+        
+        
     </div>
 
     <div id="mobile-menu" class="max-h-0 overflow-hidden md:hidden bg-cyan-600 transition-all duration-300 ease-in-out">
@@ -61,11 +99,40 @@
                     <i class="fa-solid fa-envelope mr-3 w-6"></i>Kontakt
                 </a>
             </li>
-            <li class="pt-4">
-                <a asp-controller="Account" asp-action="Login" class="block text-center rounded-md shadow-md font-semibold bg-amber-600 px-4 py-3 text-cyan-100 hover:bg-amber-700 hover:scale-105 transition-all duration-200">
-                    <i class="fa-solid fa-user mr-2"></i>Prijava
-                </a>
-            </li>
+            @if (isAdmin)
+            {
+                <li class="pt-4">
+                    <a asp-controller="Auth" asp-action="Login" class="block text-center rounded-md shadow-md font-semibold bg-amber-600 px-4 py-3 text-cyan-100 hover:bg-amber-700 hover:scale-105 transition-all duration-200">
+                        <i class="fa-solid fa-user mr-2"></i>Administracija
+                    </a>
+                </li>
+            }
+            else if(isAuthenticated)
+            {
+                <li class="pt-4">
+                    <a asp-controller="Auth" asp-action="Login" class="block text-center rounded-md shadow-md font-semibold bg-amber-600 px-4 py-3 text-cyan-100 hover:bg-amber-700 hover:scale-105 transition-all duration-200">
+                        <i class="fa-solid fa-user mr-2"></i>Profil
+                    </a>
+                </li>
+            }
+            
+            @if (!isAuthenticated)
+            {
+                <li class="pt-4">
+                    <a asp-controller="Auth" asp-action="Login" class="block text-center rounded-md shadow-md font-semibold bg-amber-600 px-4 py-3 text-cyan-100 hover:bg-amber-700 hover:scale-105 transition-all duration-200">
+                        <i class="fa-solid fa-user mr-2"></i>Prijava
+                    </a>
+                </li>
+            }
+            else
+            {
+                <form asp-action="Logout" asp-controller="Auth" method="post">
+                    <button type="submit" class="block text-center w-full rounded-md shadow-md font-semibold bg-red-600 px-4 py-3 text-cyan-100 hover:bg-red-700 hover:scale-105 transition-all duration-200">
+                        <i class="fa-solid fa-user mr-2"></i>Odjava
+                    </button>
+                </form>
+            }
+            
         </ul>
     </div>
 </header>

@@ -111,7 +111,7 @@ public class AuthController : Controller
     {
         await _authService.LogoutAsync();
 
-        return View("Login");
+        return RedirectToAction("Login");
     }
     
 }
