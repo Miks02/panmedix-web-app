@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using PanMedix.Exceptions.User;
@@ -22,10 +23,18 @@ public class AuthController : Controller
         _registerValidator = registerValidator;
         _authService = authService;
     }
+
+    private string GetCurrentUser()
+    {
+        return User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+    }
     
     [HttpGet]
     public IActionResult Login()
     {
+        if (!string.IsNullOrWhiteSpace(GetCurrentUser()))
+            return RedirectToAction("Index", "Home");
+        
         return View();
     }
 
@@ -41,14 +50,26 @@ public class AuthController : Controller
                 ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
             return View(request);
         }
+        
+        try
+        {
+            await _authService.LoginAsync(request);
+        }
+        catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError(nameof(request.Password), ex.Message);
+            return View(request);
+        }
 
-        return View();
-
+        return RedirectToAction("Index", "Home");
     }
 
     [HttpGet]
     public IActionResult Register()
     {
+        if (!string.IsNullOrWhiteSpace(GetCurrentUser()))
+            return RedirectToAction("Index", "Home");
+        
         return View();
     }
 
@@ -61,9 +82,8 @@ public class AuthController : Controller
         {
             ModelState.Clear();
             foreach (var error in result.Errors)
-            {
                 ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-            }
+            
             return View(request);
         }
 
@@ -84,6 +104,14 @@ public class AuthController : Controller
 
         return RedirectToAction("Index", "Home");
 
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Logout()
+    {
+        await _authService.LogoutAsync();
+
+        return View("Login");
     }
     
 }
