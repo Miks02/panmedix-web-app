@@ -1,5 +1,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using PanMedix.Exceptions.User;
+using PanMedix.Services.Interfaces;
 using PanMedix.ViewModels;
 
 namespace PanMedix.Controllers;
@@ -8,17 +10,17 @@ public class AuthController : Controller
 {
     private readonly IValidator<LoginViewModel> _loginValidator;
     private readonly IValidator<RegisterViewModel> _registerValidator;
-    private readonly ILogger<AuthController> _logger;
+    private readonly IAuthService _authService;
     
     public AuthController(
         IValidator<LoginViewModel> loginValidator,
         IValidator<RegisterViewModel> registerValidator,
-        ILogger<AuthController> logger
+        IAuthService authService
         )
     {
         _loginValidator = loginValidator;
         _registerValidator = registerValidator;
-        _logger = logger;
+        _authService = authService;
     }
     
     [HttpGet]
@@ -61,12 +63,26 @@ public class AuthController : Controller
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                _logger.LogError(error.ErrorMessage);
             }
             return View(request);
         }
 
-        return View();
+        try
+        {
+            await _authService.RegisterAsync(request);
+        }
+        catch (UserAlreadyExistsException ex)
+        {
+            ModelState.AddModelError(nameof(request.Email), ex.Message);
+            return View(request);
+        }
+        catch (InvalidOperationException)
+        {
+            TempData["ErrorMessage"] = "Došlo je do greške prilikom registracije, pokušajte ponovo kasnije";
+            return View(request);
+        }
+
+        return RedirectToAction("Index", "Home");
 
     }
     
