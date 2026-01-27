@@ -61,7 +61,7 @@ public class AuthController : Controller
             return View(request);
         }
 
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Index", "Profile");
     }
 
     [HttpGet]
