@@ -1,0 +1,292 @@
+@{
+    var isUser = User.IsInRole("User");
+    var isGuardian = User.IsInRole("Guardian");
+    var isAdmin = User.IsInRole("Admin");
+    var isPharmacy = User.IsInRole("Pharmacy");
+
+    var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+
+    bool IsActive(string area, string controller, string action)
+    {
+        return string.Equals(currentArea, area, StringComparison.OrdinalIgnoreCase) &&
+               string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase) &&
+               string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase);
+    }
+}
+
+<aside class="hidden font-semibold md:flex flex-col h-screen w-[300px] bg-gradient-to-b from-cyan-600 to-cyan-700 shadow-xl p-5 sticky top-0">
+    <div class="flex flex-col p-5 justify-center items-center border-b border-cyan-500/50">
+        <span class="text-2xl font-bold text-amber-100">PanMedix</span>
+    </div>
+
+    <ul class="flex flex-col text-lg text-amber-100/80 mt-5 space-y-1 overflow-y-auto">
+        @if (isUser || isGuardian)
+        {
+            <li>
+                <a asp-area="User" asp-controller="Profile" asp-action="Index"
+                   class="group flex cursor-pointer p-3 items-center rounded-lg transition-all duration-300 @(IsActive("User", "Profile", "Index") ? "bg-amber-500/20 text-amber-200" : "hover:bg-amber-500/10 hover:text-amber-200")">
+                    <i class="fa-solid fa-user w-8 transition-transform duration-300 group-hover:-translate-y-0.5"></i>
+                    <span>Moj nalog</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="User" asp-controller="Order" asp-action="Index"
+                   class="group flex cursor-pointer p-3 items-center rounded-lg transition-all duration-300 @(IsActive("User", "Order", "Index") ? "bg-amber-500/20 text-amber-200" : "hover:bg-amber-500/10 hover:text-amber-200")">
+                    <i class="fa-solid fa-box w-8 transition-transform duration-300 group-hover:-translate-y-0.5"></i>
+                    <span>Porudžbine</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="User" asp-controller="Settings" asp-action="Index"
+                   class="group flex cursor-pointer p-3 items-center rounded-lg transition-all duration-300 @(IsActive("User", "Settings", "Index") ? "bg-amber-500/20 text-amber-200" : "hover:bg-amber-500/10 hover:text-amber-200")">
+                    <i class="fa-solid fa-gear w-8 transition-transform duration-300 group-hover:-translate-y-0.5"></i>
+                    <span>Podešavanja</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="User" asp-controller="Subscription" asp-action="Active"
+                   class="group flex cursor-pointer p-3 items-center rounded-lg transition-all duration-300 @(IsActive("User", "Subscription", "Active") ? "bg-amber-500/20 text-amber-200" : "hover:bg-amber-500/10 hover:text-amber-200")">
+                    <i class="fa-solid fa-calendar-check w-8 transition-transform duration-300 group-hover:-translate-y-0.5"></i>
+                    <span>Aktivne pretplate</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="User" asp-controller="Prescription" asp-action="Index"
+                   class="group flex cursor-pointer p-3 items-center rounded-lg transition-all duration-300 @(IsActive("User", "Prescription", "Index") ? "bg-amber-500/20 text-amber-200" : "hover:bg-amber-500/10 hover:text-amber-200")">
+                    <i class="fa-solid fa-file-prescription w-8 transition-transform duration-300 group-hover:-translate-y-0.5"></i>
+                    <span>Moji recepti</span>
+                </a>
+            </li>
+        }
+
+        @if (isGuardian)
+        {
+            <li class="pt-4 mt-4 border-t border-cyan-500/50">
+                <span class="px-3 text-xs font-semibold text-cyan-200 uppercase tracking-wider">Staratelj</span>
+            </li>
+            <li>
+                <a asp-area="Guardian" asp-controller="Ward" asp-action="Index"
+                   class="group flex cursor-pointer p-3 items-center rounded-lg transition-all duration-300 @(IsActive("Guardian", "Ward", "Index") ? "bg-amber-500/20 text-amber-200" : "hover:bg-amber-500/10 hover:text-amber-200")">
+                    <i class="fa-solid fa-users-viewfinder w-8 transition-transform duration-300 group-hover:-translate-y-0.5"></i>
+                    <span>Moji stićenici</span>
+                </a>
+            </li>
+        }
+
+        @if (isPharmacy)
+        {
+            <li>
+                <a asp-area="Pharmacy" asp-controller="Dashboard" asp-action="Index"
+                   class="group flex cursor-pointer p-3 items-center rounded-lg transition-all duration-300 @(IsActive("Pharmacy", "Dashboard", "Index") ? "bg-amber-500/20 text-amber-200" : "hover:bg-amber-500/10 hover:text-amber-200")">
+                    <i class="fa-solid fa-house-medical w-8 transition-transform duration-300 group-hover:-translate-y-0.5"></i>
+                    <span>Moja apoteka</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="Pharmacy" asp-controller="Medicine" asp-action="Manage"
+                   class="group flex cursor-pointer p-3 items-center rounded-lg transition-all duration-300 @(IsActive("Pharmacy", "Medicine", "Manage") ? "bg-amber-500/20 text-amber-200" : "hover:bg-amber-500/10 hover:text-amber-200")">
+                    <i class="fa-solid fa-pills w-8 transition-transform duration-300 group-hover:-translate-y-0.5"></i>
+                    <span>Upravljanje lekovima</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="Pharmacy" asp-controller="Order" asp-action="Review"
+                   class="group flex cursor-pointer p-3 items-center rounded-lg transition-all duration-300 @(IsActive("Pharmacy", "Order", "Review") ? "bg-amber-500/20 text-amber-200" : "hover:bg-amber-500/10 hover:text-amber-200")">
+                    <i class="fa-solid fa-list-check w-8 transition-transform duration-300 group-hover:-translate-y-0.5"></i>
+                    <span>Pregled porudžbina</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="Pharmacy" asp-controller="Subscription" asp-action="Review"
+                   class="group flex cursor-pointer p-3 items-center rounded-lg transition-all duration-300 @(IsActive("Pharmacy", "Subscription", "Review") ? "bg-amber-500/20 text-amber-200" : "hover:bg-amber-500/10 hover:text-amber-200")">
+                    <i class="fa-solid fa-receipt w-8 transition-transform duration-300 group-hover:-translate-y-0.5"></i>
+                    <span>Pregled pretplata</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="Pharmacy" asp-controller="Settings" asp-action="Index"
+                   class="group flex cursor-pointer p-3 items-center rounded-lg transition-all duration-300 @(IsActive("Pharmacy", "Settings", "Index") ? "bg-amber-500/20 text-amber-200" : "hover:bg-amber-500/10 hover:text-amber-200")">
+                    <i class="fa-solid fa-gears w-8 transition-transform duration-300 group-hover:-translate-y-0.5"></i>
+                    <span>Podešavanje</span>
+                </a>
+            </li>
+        }
+
+        @if (isAdmin)
+        {
+            <li>
+                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index"
+                   class="group flex cursor-pointer p-3 items-center rounded-lg transition-all duration-300 @(IsActive("Admin", "Dashboard", "Index") ? "bg-amber-500/20 text-amber-200" : "hover:bg-amber-500/10 hover:text-amber-200")">
+                    <i class="fa-solid fa-gauge-high w-8 transition-transform duration-300 group-hover:-translate-y-0.5"></i>
+                    <span>Admin panel</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="Admin" asp-controller="Guardian" asp-action="Validate"
+                   class="group flex cursor-pointer p-3 items-center rounded-lg transition-all duration-300 @(IsActive("Admin", "Guardian", "Validate") ? "bg-amber-500/20 text-amber-200" : "hover:bg-amber-500/10 hover:text-amber-200")">
+                    <i class="fa-solid fa-user-shield w-8 transition-transform duration-300 group-hover:-translate-y-0.5"></i>
+                    <span>Validacija staratelja</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="Admin" asp-controller="Prescription" asp-action="Check"
+                   class="group flex cursor-pointer p-3 items-center rounded-lg transition-all duration-300 @(IsActive("Admin", "Prescription", "Check") ? "bg-amber-500/20 text-amber-200" : "hover:bg-amber-500/10 hover:text-amber-200")">
+                    <i class="fa-solid fa-notes-medical w-8 transition-transform duration-300 group-hover:-translate-y-0.5"></i>
+                    <span>Provera recepata</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="Admin" asp-controller="Pharmacy" asp-action="Manage"
+                   class="group flex cursor-pointer p-3 items-center rounded-lg transition-all duration-300 @(IsActive("Admin", "Pharmacy", "Manage") ? "bg-amber-500/20 text-amber-200" : "hover:bg-amber-500/10 hover:text-amber-200")">
+                    <i class="fa-solid fa-hospital w-8 transition-transform duration-300 group-hover:-translate-y-0.5"></i>
+                    <span>Upravljanje apotekama</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="Admin" asp-controller="Settings" asp-action="Index"
+                   class="group flex cursor-pointer p-3 items-center rounded-lg transition-all duration-300 @(IsActive("Admin", "Settings", "Index") ? "bg-amber-500/20 text-amber-200" : "hover:bg-amber-500/10 hover:text-amber-200")">
+                    <i class="fa-solid fa-screwdriver-wrench w-8 transition-transform duration-300 group-hover:-translate-y-0.5"></i>
+                    <span>Podešavanja</span>
+                </a>
+            </li>
+        }
+    </ul>
+
+    <div class="mt-auto border-t border-cyan-500/50 pt-5 space-y-1 font-semibold text-lg">
+        <a asp-area="" asp-controller="Home" asp-action="Index"
+           class="group flex cursor-pointer p-3 items-center rounded-lg transition-all duration-300 hover:bg-amber-500/10 text-amber-100/70 hover:text-amber-100">
+            <i class="fa-solid fa-arrow-left w-8 transition-transform duration-300 group-hover:-translate-x-1"></i>
+            <span>Nazad na sajt</span>
+        </a>
+        <form asp-area="" asp-controller="Auth" asp-action="Logout" method="post">
+            <button type="submit" class="group flex w-full items-center p-3 rounded-lg transition-all duration-300 text-red-100/80 hover:bg-red-500/20 hover:text-red-200 text-left">
+                <i class="fa-solid fa-right-from-bracket w-8 transition-transform duration-300 group-hover:translate-x-1"></i>
+                <span>Odjava</span>
+            </button>
+        </form>
+    </div>
+</aside>
+
+<nav class="flex md:hidden fixed bottom-0 left-0 right-0 bg-cyan-600 border-t border-cyan-500 px-2 py-3 z-50 shadow-2xl">
+    <ul class="flex w-full justify-around items-center font-semibold">
+        @if (isUser || isGuardian)
+        {
+            <li>
+                <a asp-area="User" asp-controller="Profile" asp-action="Index" 
+                   class="flex flex-col items-center @(IsActive("User", "Profile", "Index") ? "text-amber-200" : "text-amber-100/70 hover:text-amber-100")">
+                    <i class="fa-solid fa-user text-xl"></i>
+                    <span class="text-[10px] mt-1">Profil</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="User" asp-controller="Order" asp-action="Index" 
+                   class="flex flex-col items-center @(IsActive("User", "Order", "Index") ? "text-amber-200" : "text-amber-100/70 hover:text-amber-100")">
+                    <i class="fa-solid fa-box text-xl"></i>
+                    <span class="text-[10px] mt-1">Porudžbine</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="User" asp-controller="Order" asp-action="Index" 
+                   class="flex flex-col items-center @(IsActive("User", "Order", "Index") ? "text-amber-200" : "text-amber-100/70 hover:text-amber-100")">
+                    <i class="fa-solid fa-gear text-xl"></i>
+                    <span class="text-[10px] mt-1">Podešavanja</span>
+                </a>
+            </li>
+        }
+        
+        @if (isGuardian)
+        {
+            <li>
+                <a asp-area="Guardian" asp-controller="Ward" asp-action="Index" 
+                   class="flex flex-col items-center @(IsActive("Guardian", "Ward", "Index") ? "text-amber-200" : "text-amber-100/70 hover:text-amber-100")">
+                    <i class="fa-solid fa-users-viewfinder text-xl"></i>
+                    <span class="text-[10px] mt-1">Stićenici</span>
+                </a>
+            </li>
+        }
+
+        @if (isPharmacy)
+        {
+            <li>
+                <a asp-area="Pharmacy" asp-controller="Dashboard" asp-action="Index" 
+                   class="flex flex-col items-center @(IsActive("Pharmacy", "Dashboard", "Index") ? "text-amber-200" : "text-amber-100/70 hover:text-amber-100")">
+                    <i class="fa-solid fa-house-medical text-xl"></i>
+                    <span class="text-[10px] mt-1">Apoteka</span>
+                </a>
+            </li>
+        }
+
+        @if (isAdmin)
+        {
+            <li>
+                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" 
+                   class="flex flex-col items-center @(IsActive("Admin", "Dashboard", "Index") ? "text-amber-200" : "text-amber-100/70 hover:text-amber-100")">
+                    <i class="fa-solid fa-gauge-high text-xl"></i>
+                    <span class="text-[10px] mt-1">Admin</span>
+                </a>
+            </li>
+        }
+
+        <li>
+            <button onclick="const menu = document.getElementById('mobile-menu'); menu.classList.remove('hidden'); setTimeout(() => menu.style.transform = 'translateX(0)', 10);" 
+                    class="flex flex-col items-center text-amber-100/70 hover:text-amber-100">
+                <i class="fa-solid fa-bars text-xl"></i>
+                <span class="text-[10px] mt-1">Meni</span>
+            </button>
+        </li>
+    </ul>
+</nav>
+
+<div id="mobile-menu" 
+     style="transform: translateX(-100%); transition: transform 0.3s ease-in-out;"
+     class="hidden font-semibold md:hidden fixed inset-0 bg-cyan-700/95 z-[60] p-10 backdrop-blur-md flex flex-col">
+    <div class="flex justify-between items-center mb-10 border-b border-cyan-500/50 pb-5">
+        <span class="text-2xl font-bold text-amber-100">PanMedix</span>
+        <button onclick="const menu = document.getElementById('mobile-menu'); menu.style.transform = 'translateX(-100%)'; setTimeout(() => menu.classList.add('hidden'), 300);" 
+                class="text-amber-100/70 hover:text-white">
+            <i class="fa-solid fa-xmark text-3xl"></i>
+        </button>
+    </div>
+    
+    <ul class="flex flex-col space-y-4 text-xl text-amber-100/90 overflow-y-auto">
+        @if (isUser || isGuardian)
+        {
+            <li><a asp-area="User" asp-controller="Prescription" asp-action="Index" class="flex items-center gap-4 @(IsActive("User", "Prescription", "Index") ? "text-amber-200" : "")"><i class="fa-solid fa-user w-8"></i>Moj nalog</a></li>
+            <li><a asp-area="User" asp-controller="Subscription" asp-action="Active" class="flex items-center gap-4 @(IsActive("User", "Subscription", "Active") ? "text-amber-200" : "")"><i class="fa-solid fa-calendar-check w-8"></i>Aktivne pretplate</a></li>
+            <li><a asp-area="User" asp-controller="Prescription" asp-action="Index" class="flex items-center gap-4 @(IsActive("User", "Prescription", "Index") ? "text-amber-200" : "")"><i class="fa-solid fa-file-prescription w-8"></i>Moji recepti</a></li>
+            <li><a asp-area="User" asp-controller="Prescription" asp-action="Index" class="flex items-center gap-4 @(IsActive("User", "Prescription", "Index") ? "text-amber-200" : "")"><i class="fa-solid fa-box w-8"></i>Porudžbine</a></li>
+
+            @if (isGuardian)
+            {
+                <li><a asp-area="Guardian" asp-controller="Ward" asp-action="Index" class="flex items-center gap-4 @(IsActive("Guardian", "Ward", "Index") ? "text-amber-200" : "")"><i class="fa-solid fa-users-viewfinder w-8"></i> Moji stićenici</a></li>
+            }
+            <li><a asp-area="User" asp-controller="Settings" asp-action="Index" class="flex items-center gap-4 @(IsActive("User", "Settings", "Index") ? "text-amber-200" : "")"><i class="fa-solid fa-gear w-8"></i> Podešavanja</a></li>
+        }
+        
+        @if (isPharmacy)
+        {
+            <li><a asp-area="Pharmacy" asp-controller="Medicine" asp-action="Manage" class="flex items-center gap-4 @(IsActive("Pharmacy", "Medicine", "Manage") ? "text-amber-200" : "")"><i class="fa-solid fa-pills w-8"></i> Upravljanje lekovima</a></li>
+            <li><a asp-area="Pharmacy" asp-controller="Order" asp-action="Review" class="flex items-center gap-4 @(IsActive("Pharmacy", "Order", "Review") ? "text-amber-200" : "")"><i class="fa-solid fa-list-check w-8"></i> Pregled porudžbina</a></li>
+            <li><a asp-area="Pharmacy" asp-controller="Subscription" asp-action="Review" class="flex items-center gap-4 @(IsActive("Pharmacy", "Subscription", "Review") ? "text-amber-200" : "")"><i class="fa-solid fa-receipt w-8"></i> Pregled pretplata</a></li>
+            <li><a asp-area="Pharmacy" asp-controller="Settings" asp-action="Index" class="flex items-center gap-4 @(IsActive("Pharmacy", "Settings", "Index") ? "text-amber-200" : "")"><i class="fa-solid fa-gears w-8"></i> Podešavanje</a></li>
+        }
+
+        @if (isAdmin)
+        {
+            <li><a asp-area="Admin" asp-controller="Guardian" asp-action="Validate" class="flex items-center gap-4 @(IsActive("Admin", "Guardian", "Validate") ? "text-amber-200" : "")"><i class="fa-solid fa-user-shield w-8"></i> Validacija staratelja</a></li>
+            <li><a asp-area="Admin" asp-controller="Prescription" asp-action="Check" class="flex items-center gap-4 @(IsActive("Admin", "Prescription", "Check") ? "text-amber-200" : "")"><i class="fa-solid fa-notes-medical w-8"></i> Provera recepata</a></li>
+            <li><a asp-area="Admin" asp-controller="Pharmacy" asp-action="Manage" class="flex items-center gap-4 @(IsActive("Admin", "Pharmacy", "Manage") ? "text-amber-200" : "")"><i class="fa-solid fa-hospital w-8"></i> Upravljanje apotekama</a></li>
+            <li><a asp-area="Admin" asp-controller="Settings" asp-action="Index" class="flex items-center gap-4 @(IsActive("Admin", "Settings", "Index") ? "text-amber-200" : "")"><i class="fa-solid fa-screwdriver-wrench w-8"></i> Podešavanja</a></li>
+        }
+        
+        <li class="pt-10 border-t border-cyan-500/50">
+             <form asp-area="" asp-controller="Auth" asp-action="Logout" method="post">
+                <button type="submit" class="flex items-center gap-4 text-red-200">
+                    <i class="fa-solid fa-right-from-bracket w-8"></i> Odjava
+                </button>
+            </form>
+        </li>
+    </ul>
+</div>
