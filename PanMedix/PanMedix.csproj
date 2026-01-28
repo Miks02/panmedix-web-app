@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\Auth\" />
     <Folder Include="wwwroot\AppImages\" />
   </ItemGroup>
 

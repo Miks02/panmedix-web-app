@@ -61,6 +61,9 @@ public class AuthController : Controller
             return View(request);
         }
 
+        if (User.IsInRole("Admin"))
+            return RedirectToAction("Index", "Statistics");
+
         return RedirectToAction("Index", "Profile");
     }
 

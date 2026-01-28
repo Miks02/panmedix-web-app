@@ -30,10 +30,16 @@ public class AuthService : IAuthService
             FirstName = request.FirstName,
             LastName = request.LastName,
             Email = request.Email,
-            UserName = request.Email
+            UserName = request.Email,
+            IsGuardianApproved = false
         };
 
-        var newUser = await _userService.AddUserAsync(user, UserRole.User, request.Password);
+        UserRole role = UserRole.User;
+
+        if (request.IsGuardian)
+            role = UserRole.Guardian;
+
+        var newUser = await _userService.AddUserAsync(user, role, request.Password);
 
         await _signInManager.SignInAsync(newUser, isPersistent: false);
 
@@ -50,7 +56,7 @@ public class AuthService : IAuthService
         
         if(!isPasswordValid.Succeeded)
             throw new InvalidOperationException("Korisničko ime ili lozinka nisu tačni");
-
+        
         await _signInManager.SignInAsync(user, isPersistent: false);
 
     }
