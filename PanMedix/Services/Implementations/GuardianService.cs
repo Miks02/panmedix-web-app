@@ -56,6 +56,7 @@ public class GuardianService : IGuardianService
     {
         var query = _context.Users
             .AsNoTracking()
+            .OrderBy(w => w.CreatedAt)
             .Where(w => w.GuardianStatus != GuardianStatus.NotGuardian)
             .AsQueryable();
 
@@ -96,7 +97,7 @@ public class GuardianService : IGuardianService
         }
 
         query = query
-            .Skip((page + pageSize) * page)
+            .Skip((page - 1) * pageSize)
             .Take(pageSize);
         
         return query;
