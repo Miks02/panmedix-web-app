@@ -1,0 +1,159 @@
+
+@{
+    ViewBag.Title = "Statistika";
+    Layout = "_Dashboard";
+}
+
+<div class="p-6 space-y-8">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="bg-cyan-100 p-4 px-6 rounded-xl">
+            <h1 class="text-3xl font-bold text-cyan-900">Statistički Pregled</h1>
+            <p class="text-cyan-700">Detaljan uvid u poslovanje i metriku PanMedix platforme</p>
+        </div>
+        <div class="flex gap-2">
+            <span class="px-4 py-2 bg-white rounded-lg shadow-sm text-sm font-semibold text-cyan-700 border border-cyan-100">
+                Osveženo: @DateTime.Now.ToString("dd.MM.yyyy HH:mm")
+            </span>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-gradient-to-br from-white to-cyan-50 p-6 rounded-2xl shadow-sm border border-cyan-100 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-4">
+                <div class="p-3 bg-cyan-100 rounded-xl text-cyan-600">
+                    <i class="fa-solid fa-users text-2xl"></i>
+                </div>
+                <span class="text-green-500 text-sm font-bold">+12% <i class="fa-solid fa-arrow-up"></i></span>
+            </div>
+            <h3 class="text-cyan-700 font-medium">Ukupno Korisnika</h3>
+            <p class="text-3xl font-bold text-cyan-900">1,284</p>
+        </div>
+
+        <div class="bg-gradient-to-br from-white to-amber-50 p-6 rounded-2xl shadow-sm border border-amber-100 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-4">
+                <div class="p-3 bg-amber-100 rounded-xl text-amber-600">
+                    <i class="fa-solid fa-calendar-check text-2xl"></i>
+                </div>
+                <span class="text-green-500 text-sm font-bold">+5% <i class="fa-solid fa-arrow-up"></i></span>
+            </div>
+            <h3 class="text-cyan-700 font-medium">Aktivne Pretplate</h3>
+            <p class="text-3xl font-bold text-cyan-900">456</p>
+        </div>
+
+        <div class="bg-gradient-to-br from-white to-cyan-50 p-6 rounded-2xl shadow-sm border border-cyan-100 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-4">
+                <div class="p-3 bg-cyan-100 rounded-xl text-cyan-600">
+                    <i class="fa-solid fa-money-bill-trend-up text-2xl"></i>
+                </div>
+                <span class="text-green-500 text-sm font-bold">+18% <i class="fa-solid fa-arrow-up"></i></span>
+            </div>
+            <h3 class="text-cyan-700 font-medium">Mesečni Prihod</h3>
+            <p class="text-3xl font-bold text-cyan-900">12,450 €</p>
+        </div>
+
+        <div class="bg-gradient-to-br from-white to-red-50 p-6 rounded-2xl shadow-sm border border-red-100 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-4">
+                <div class="p-3 bg-red-100 rounded-xl text-red-600">
+                    <i class="fa-solid fa-hospital text-2xl"></i>
+                </div>
+                <span class="text-cyan-500 text-sm font-bold">Stabilno</span>
+            </div>
+            <h3 class="text-cyan-700 font-medium">Broj Apoteka</h3>
+            <p class="text-3xl font-bold text-cyan-900">42</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-cyan-100">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-cyan-900">Nedavne Transakcije</h2>
+                <button class="text-cyan-600 hover:text-cyan-700 font-semibold text-sm">Pogledaj sve</button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="text-cyan-600 border-b border-cyan-50">
+                            <th class="pb-3 font-semibold">Korisnik</th>
+                            <th class="pb-3 font-semibold">Tip</th>
+                            <th class="pb-3 font-semibold">Iznos</th>
+                            <th class="pb-3 font-semibold">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-cyan-50">
+                        <tr class="hover:bg-cyan-50/50 transition-colors">
+                            <td class="py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-600 font-bold text-xs">MA</div>
+                                    <span class="font-medium text-cyan-900">Marko Antić</span>
+                                </div>
+                            </td>
+                            <td class="py-4 text-cyan-700">Pretplata</td>
+                            <td class="py-4 font-bold text-cyan-900">29.99 €</td>
+                            <td class="py-4">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-bold">Uspešno</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-cyan-50/50 transition-colors">
+                            <td class="py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 font-bold text-xs">JP</div>
+                                    <span class="font-medium text-cyan-900">Jovana Perić</span>
+                                </div>
+                            </td>
+                            <td class="py-4 text-cyan-700">Lekovi</td>
+                            <td class="py-4 font-bold text-cyan-900">15.50 €</td>
+                            <td class="py-4">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-bold">Uspešno</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-cyan-50/50 transition-colors">
+                            <td class="py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-600 font-bold text-xs">SN</div>
+                                    <span class="font-medium text-cyan-900">Stefan Nikić</span>
+                                </div>
+                            </td>
+                            <td class="py-4 text-cyan-700">Pretplata</td>
+                            <td class="py-4 font-bold text-cyan-900">29.99 €</td>
+                            <td class="py-4">
+                                <span class="px-2 py-1 bg-amber-100 text-amber-700 text-xs rounded-full font-bold">Na čekanju</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-cyan-100">
+            <h2 class="text-xl font-bold text-cyan-900 mb-6">Finansijski Izveštaj</h2>
+            <div class="space-y-6">
+                <div>
+                    <div class="flex justify-between mb-2">
+                        <span class="text-cyan-700">Planirani Cilj</span>
+                        <span class="text-cyan-900 font-bold">85%</span>
+                    </div>
+                    <div class="w-full bg-cyan-100 rounded-full h-2">
+                        <div class="bg-cyan-600 h-2 rounded-full" style="width: 85%"></div>
+                    </div>
+                </div>
+                <div class="pt-4 border-t border-cyan-50">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-cyan-700">Bruto Prihod</span>
+                        <span class="text-cyan-900 font-bold">14,200 €</span>
+                    </div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-cyan-700">Troškovi</span>
+                        <span class="text-cyan-900 font-bold">1,750 €</span>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-cyan-50 rounded-xl">
+                        <span class="font-bold text-cyan-900">Neto Profit</span>
+                        <span class="font-bold text-green-600 text-xl">12,450 €</span>
+                    </div>
+                </div>
+                <button class="w-full py-3 bg-cyan-600 hover:bg-cyan-700 text-white font-bold rounded-xl transition-colors shadow-lg shadow-cyan-200">
+                    Generiši PDF Izveštaj
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

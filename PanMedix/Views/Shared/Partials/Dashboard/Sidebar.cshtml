@@ -117,10 +117,10 @@
         @if (isAdmin)
         {
             <li>
-                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index"
+                <a asp-area="Admin" asp-controller="Statistics" asp-action="Index"
                    class="group flex cursor-pointer p-3 items-center rounded-lg transition-all duration-300 @(IsActive("Admin", "Dashboard", "Index") ? "bg-amber-500/20 text-amber-200" : "hover:bg-amber-500/10 hover:text-amber-200")">
                     <i class="fa-solid fa-gauge-high w-8 transition-transform duration-300 group-hover:-translate-y-0.5"></i>
-                    <span>Admin panel</span>
+                    <span>Statistika</span>
                 </a>
             </li>
             <li>
@@ -221,10 +221,10 @@
         @if (isAdmin)
         {
             <li>
-                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" 
+                <a asp-area="Admin" asp-controller="Statistics" asp-action="Index" 
                    class="flex flex-col items-center @(IsActive("Admin", "Dashboard", "Index") ? "text-amber-200" : "text-amber-100/70 hover:text-amber-100")">
                     <i class="fa-solid fa-gauge-high text-xl"></i>
-                    <span class="text-[10px] mt-1">Admin</span>
+                    <span class="text-[10px] mt-1">Statistika</span>
                 </a>
             </li>
         }
@@ -275,6 +275,7 @@
 
         @if (isAdmin)
         {
+            <li><a asp-area="Admin" asp-controller="Statistics" asp-action="Index" class="flex items-center gap-4 @(IsActive("Admin", "Guardian", "Validate") ? "text-amber-200" : "")"><i class="fa-solid fa-gauge-high w-8"></i>Statistika</a></li>
             <li><a asp-area="Admin" asp-controller="Guardian" asp-action="Validate" class="flex items-center gap-4 @(IsActive("Admin", "Guardian", "Validate") ? "text-amber-200" : "")"><i class="fa-solid fa-user-shield w-8"></i> Validacija staratelja</a></li>
             <li><a asp-area="Admin" asp-controller="Prescription" asp-action="Check" class="flex items-center gap-4 @(IsActive("Admin", "Prescription", "Check") ? "text-amber-200" : "")"><i class="fa-solid fa-notes-medical w-8"></i> Provera recepata</a></li>
             <li><a asp-area="Admin" asp-controller="Pharmacy" asp-action="Manage" class="flex items-center gap-4 @(IsActive("Admin", "Pharmacy", "Manage") ? "text-amber-200" : "")"><i class="fa-solid fa-hospital w-8"></i> Upravljanje apotekama</a></li>
