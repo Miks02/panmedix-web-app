@@ -1,7 +1,15 @@
+@using PanMedix.DTO.Global
+@using PanMedix.Enums
+@using PanMedix.ViewModels
+
+@model PagedResult<GuardianViewModel>
 
 @{
     ViewBag.Title = "Upravljanje Starateljima";
     Layout = "_Dashboard";
+
+    var guardians = Model.Items;
+    var areGuardiansPresent = guardians.Count > 0;
 }
 
 <div class="p-6 space-y-6">
@@ -10,15 +18,13 @@
             <h1 class="text-3xl font-bold text-cyan-900">Upravljanje Starateljima</h1>
             <p class="text-cyan-700">Pregled, odobravanje i administracija staratelja na platformi</p>
         </div>
-        <button class="flex items-center justify-center gap-2 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl transition-all shadow-lg shadow-amber-200">
-            <i class="fa-solid fa-plus text-lg"></i>
-            <span>Dodaj staratelja</span>
-        </button>
     </div>
 
     <div class="bg-white p-6 rounded-2xl shadow-sm border border-cyan-100">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-            <div class="flex flex-wrap items-center gap-3">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            @if (areGuardiansPresent)
+            {
+                <div class="flex flex-wrap items-center gap-3 mb-4">
                 <div class="relative">
                     <select class="appearance-none pl-10 pr-10 py-2.5 bg-cyan-50 border border-cyan-200 text-cyan-900 text-sm rounded-xl focus:ring-cyan-500 focus:border-cyan-500 block w-full outline-none">
                         <option value="all">Svi staratelji</option>
@@ -36,7 +42,7 @@
                 <div class="relative">
                     <select class="appearance-none pl-10 pr-10 py-2.5 bg-cyan-50 border border-cyan-200 text-cyan-900 text-sm rounded-xl focus:ring-cyan-500 focus:border-cyan-500 block w-full outline-none">
                         <option value="name">Sortiraj po imenu</option>
-                        <option value="wards">Sortiraj po broju stićenika</option>
+                        <option value="wards">Sortiraj po broju štićenika</option>
                         <option value="date">Sortiraj po datumu prijave</option>
                     </select>
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-cyan-600">
@@ -48,158 +54,161 @@
                 </div>
             </div>
 
-            <div class="relative w-full md:w-64">
+            <div class="flex flex-wrap items-center gap-3 mb-4">
                 <input type="text" placeholder="Pretraži staratelje..." class="w-full pl-10 pr-4 py-2.5 bg-cyan-50 border border-cyan-200 text-cyan-900 text-sm rounded-xl focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all">
                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 text-cyan-600">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
             </div>
+            }
+            
         </div>
 
         <div class="overflow-x-auto rounded-xl">
-            <table class="w-full text-left border-collapse">
+            @if (!areGuardiansPresent)
+            {
+                <div class="flex flex-col justify-center items-center w-full p-4 gap-2 text-center">
+                    <i class="fa-solid fa-ban text-5xl text-red-900"></i>
+                    <h1 class="text-4xl font-semibold text-slate-800">Nema rezultata</h1>
+                    <p class="text-xl font-semibold text-slate-600">Staratelji sa traženim parametrima nisu pronadjeni</p>
+                </div>
+            }
+            else
+            {
+                <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-cyan-50/50 text-cyan-800 border-b border-cyan-100">
-                        <th class="px-6 py-4 font-bold text-sm uppercase tracking-wider">Korisnik</th>
-                        <th class="px-6 py-4 font-bold text-sm uppercase tracking-wider text-center">Status</th>
-                        <th class="px-6 py-4 font-bold text-sm uppercase tracking-wider text-center">Broj stićenika</th>
-                        <th class="px-6 py-4 font-bold text-sm uppercase tracking-wider text-right">Akcije</th>
-                    </tr>
+                <tr class="bg-cyan-50/50 text-cyan-800 border-b border-cyan-100">
+                    <th class="px-6 py-4 font-bold text-sm uppercase tracking-wider">Korisnik</th>
+                    <th class="px-6 py-4 font-bold text-sm uppercase tracking-wider text-center">Status</th>
+                    <th class="px-6 py-4 font-bold text-sm uppercase tracking-wider text-center">Broj štićenika</th>
+                    <th class="px-6 py-4 font-bold text-sm uppercase tracking-wider text-right">Akcije</th>
+                </tr>
                 </thead>
                 <tbody class="divide-y divide-cyan-50">
-                    <tr class="hover:bg-cyan-50/30 transition-colors">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-100 to-cyan-200 flex items-center justify-center text-cyan-700 font-bold shadow-sm overflow-hidden">
-                                    <img src="https://ui-avatars.com/api/?name=Nikola+Petrovic&background=cffafe&color=0891b2&bold=true" alt="Avatar" class="w-full h-full object-cover">
-                                </div>
-                                <div>
-                                    <div class="font-bold text-cyan-900">Nikola Petrović</div>
-                                    <div class="text-xs text-cyan-600 font-medium">nikola.p@gmail.com</div>
-                                </div>
+                @foreach (var guardian in guardians)
+                {
+                   <tr class="hover:bg-cyan-50/30 transition-colors">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-100 to-cyan-200 flex items-center justify-center text-cyan-700 font-bold shadow-sm overflow-hidden">
+                                <img src="https://ui-avatars.com/api/?name=Nikola+Petrovic&background=cffafe&color=0891b2&bold=true" alt="Avatar" class="w-full h-full object-cover">
                             </div>
-                        </td>
-                        <td class="px-6 py-4 text-center whitespace-nowrap">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold ring-1 ring-inset ring-green-600/20">
-                                <span class="w-1.5 h-1.5 rounded-full bg-green-600"></span>
-                                Odobren
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-center whitespace-nowrap font-bold text-cyan-900">
-                            3
-                        </td>
-                        <td class="px-6 py-4 text-right whitespace-nowrap">
-                            <button class="p-2 text-cyan-600 hover:bg-cyan-50 rounded-lg transition-colors" title="Detalji">
-                                <i class="fa-solid fa-eye"></i>
-                            </button>
-                            <button class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Izmeni">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-cyan-50/30 transition-colors">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-100 to-amber-200 flex items-center justify-center text-amber-700 font-bold shadow-sm overflow-hidden">
-                                    <img src="https://ui-avatars.com/api/?name=Marija+Lazic&background=fef3c7&color=d97706&bold=true" alt="Avatar" class="w-full h-full object-cover">
-                                </div>
-                                <div>
-                                    <div class="font-bold text-cyan-900">Marija Lazić</div>
-                                    <div class="text-xs text-cyan-600 font-medium">marija.lazic@outlook.com</div>
-                                </div>
+                            <div>
+                                <div class="font-bold text-cyan-900">@guardian.FirstName @guardian.LastName</div>
+                                <div class="text-xs text-cyan-600 font-medium">@guardian.Email</div>
                             </div>
-                        </td>
-                        <td class="px-6 py-4 text-center whitespace-nowrap">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-bold ring-1 ring-inset ring-amber-600/20">
-                                <span class="w-1.5 h-1.5 rounded-full bg-amber-600 animate-pulse"></span>
-                                Na čekanju
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-center whitespace-nowrap font-bold text-cyan-400">
-                            0
-                        </td>
-                        <td class="px-6 py-4 text-right whitespace-nowrap">
-                            <button class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold rounded-lg transition-all shadow-md shadow-cyan-100">
-                                Odobri
-                            </button>
-                            <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors ml-2" title="Odbij">
-                                <i class="fa-solid fa-xmark"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-cyan-50/30 transition-colors">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-100 to-cyan-200 flex items-center justify-center text-cyan-700 font-bold shadow-sm overflow-hidden">
-                                    <img src="https://ui-avatars.com/api/?name=Stefan+Nikolic&background=cffafe&color=0891b2&bold=true" alt="Avatar" class="w-full h-full object-cover">
-                                </div>
-                                <div>
-                                    <div class="font-bold text-cyan-900">Stefan Nikolić</div>
-                                    <div class="text-xs text-cyan-600 font-medium">stefan.n@gmail.com</div>
-                                </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-center whitespace-nowrap">
+                        @switch (guardian.Status)
+                        {
+                            case GuardianStatus.Approved:
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold ring-1 ring-inset ring-green-600/20">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-green-600"></span>
+                                    Odobren
+                                </span>
+                                break;
+                            case GuardianStatus.Pending:
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-bold ring-1 ring-inset ring-amber-600/20">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-600 animate-pulse"></span>
+                                    Na čekanju
+                                </span>
+                                break;
+                            case GuardianStatus.Denied:
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-bold ring-1 ring-inset ring-red-600/20">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-600 animate-pulse"></span>
+                                    Odbijen
+                                </span> 
+                                break;
+                                
+                        }
+                        
+                    </td>
+                    <td class="px-6 py-4 text-center whitespace-nowrap font-bold text-cyan-400">
+                        @guardian.NumberOfWards
+                    </td>
+                    <td class="px-6 py-4 text-right whitespace-nowrap">
+                        @switch (guardian.Status)
+                        {
+                            case GuardianStatus.Approved:
+                                <button class="p-2 text-cyan-600 hover:bg-cyan-50 rounded-lg transition-colors" title="Detalji">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                                <button class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Izmeni">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                break;
+                            case GuardianStatus.Pending:
+                                <button class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold rounded-lg transition-all shadow-md shadow-cyan-100">
+                                    Odobri
+                                </button>
+                                <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors ml-2" title="Odbij">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                                break;
+                            case GuardianStatus.Denied:
+                                <button class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition-all shadow-md shadow-red-100">
+                                    Obriši iz tabele
+                                </button>
+                                break;
+                        }
+                    </td>
+                    
+                    
+                </tr> 
+                }
+                
+
+
+                <tr class="hover:bg-cyan-50/30 transition-colors">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-100 to-amber-200 flex items-center justify-center text-amber-700 font-bold shadow-sm overflow-hidden">
+                                <img src="https://ui-avatars.com/api/?name=Ana+Ivic&background=fef3c7&color=d97706&bold=true" alt="Avatar" class="w-full h-full object-cover">
                             </div>
-                        </td>
-                        <td class="px-6 py-4 text-center whitespace-nowrap">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold ring-1 ring-inset ring-green-600/20">
-                                <span class="w-1.5 h-1.5 rounded-full bg-green-600"></span>
-                                Odobren
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-center whitespace-nowrap font-bold text-cyan-900">
-                            1
-                        </td>
-                        <td class="px-6 py-4 text-right whitespace-nowrap">
-                            <button class="p-2 text-cyan-600 hover:bg-cyan-50 rounded-lg transition-colors" title="Detalji">
-                                <i class="fa-solid fa-eye"></i>
-                            </button>
-                            <button class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Izmeni">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-cyan-50/30 transition-colors">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-100 to-amber-200 flex items-center justify-center text-amber-700 font-bold shadow-sm overflow-hidden">
-                                    <img src="https://ui-avatars.com/api/?name=Ana+Ivic&background=fef3c7&color=d97706&bold=true" alt="Avatar" class="w-full h-full object-cover">
-                                </div>
-                                <div>
-                                    <div class="font-bold text-cyan-900">Ana Ivić</div>
-                                    <div class="text-xs text-cyan-600 font-medium">ana.ivic@gmail.com</div>
-                                </div>
+                            <div>
+                                <div class="font-bold text-cyan-900">Ana Ivić</div>
+                                <div class="text-xs text-cyan-600 font-medium">ana.ivic@gmail.com</div>
                             </div>
-                        </td>
-                        <td class="px-6 py-4 text-center whitespace-nowrap">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-bold ring-1 ring-inset ring-amber-600/20">
-                                <span class="w-1.5 h-1.5 rounded-full bg-amber-600 animate-pulse"></span>
-                                Na čekanju
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-center whitespace-nowrap font-bold text-cyan-400">
-                            0
-                        </td>
-                        <td class="px-6 py-4 text-right whitespace-nowrap">
-                            <button class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold rounded-lg transition-all shadow-md shadow-cyan-100">
-                                Odobri
-                            </button>
-                            <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors ml-2" title="Odbij">
-                                <i class="fa-solid fa-xmark"></i>
-                            </button>
-                        </td>
-                    </tr>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-center whitespace-nowrap">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-bold ring-1 ring-inset ring-amber-600/20">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-600 animate-pulse"></span>
+                            Na čekanju
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-center whitespace-nowrap font-bold text-cyan-400">
+                        0
+                    </td>
+                    <td class="px-6 py-4 text-right whitespace-nowrap">
+                        <button class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold rounded-lg transition-all shadow-md shadow-cyan-100">
+                            Odobri
+                        </button>
+                        <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors ml-2" title="Odbij">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </td>
+                </tr>
                 </tbody>
             </table>
+            }
+            
         </div>
 
-        <div class="mt-8 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-cyan-50 pt-6">
-            <p class="text-sm text-cyan-600">Prikazano 1-4 od ukupno 24 staratelja</p>
-            <div class="flex gap-2">
-                <button class="px-4 py-2 border border-cyan-200 rounded-xl text-sm font-semibold text-cyan-700 hover:bg-cyan-50 transition-colors disabled:opacity-50">Prethodna</button>
-                <button class="px-4 py-2 bg-cyan-600 text-white rounded-xl text-sm font-semibold hover:bg-cyan-700 transition-colors shadow-md shadow-cyan-100">1</button>
-                <button class="px-4 py-2 border border-cyan-200 rounded-xl text-sm font-semibold text-cyan-700 hover:bg-cyan-50 transition-colors">2</button>
-                <button class="px-4 py-2 border border-cyan-200 rounded-xl text-sm font-semibold text-cyan-700 hover:bg-cyan-50 transition-colors">3</button>
-                <button class="px-4 py-2 border border-cyan-200 rounded-xl text-sm font-semibold text-cyan-700 hover:bg-cyan-50 transition-colors">Sledeća</button>
+        @if (areGuardiansPresent)
+        {
+            <div class="mt-8 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-cyan-50 pt-6">
+                <p class="text-sm text-cyan-600">Prikazano 1-4 od ukupno 24 staratelja</p>
+                <div class="flex gap-2">
+                    <button class="px-4 py-2 border border-cyan-200 rounded-xl text-sm font-semibold text-cyan-700 hover:bg-cyan-50 transition-colors disabled:opacity-50">Prethodna</button>
+                    <button class="px-4 py-2 bg-cyan-600 text-white rounded-xl text-sm font-semibold hover:bg-cyan-700 transition-colors shadow-md shadow-cyan-100">1</button>
+                    <button class="px-4 py-2 border border-cyan-200 rounded-xl text-sm font-semibold text-cyan-700 hover:bg-cyan-50 transition-colors">2</button>
+                    <button class="px-4 py-2 border border-cyan-200 rounded-xl text-sm font-semibold text-cyan-700 hover:bg-cyan-50 transition-colors">3</button>
+                    <button class="px-4 py-2 border border-cyan-200 rounded-xl text-sm font-semibold text-cyan-700 hover:bg-cyan-50 transition-colors">Sledeća</button>
+                </div>
             </div>
-        </div>
+        }
+        
     </div>
 </div>
