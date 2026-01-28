@@ -7,6 +7,10 @@ namespace PanMedix.Models
         public string FirstName { get; set; } = null!;
 
         public string LastName { get; set; } = null!;
+        
+        public string? PharmacyName { get; set; }
+
+        public string ImagePath { get; set; } = null!;
 
         public string? GuardianId { get; set; }
         public User? Guardian { get; set; }
