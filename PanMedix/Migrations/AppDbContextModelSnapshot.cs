@@ -275,6 +275,9 @@ namespace PanMedix.Migrations
                     b.Property<string>("GuardianId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("GuardianStatus")
+                        .HasColumnType("int");
+
                     b.Property<string>("ImagePath")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
