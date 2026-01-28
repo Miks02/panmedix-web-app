@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using PanMedix.Enums;
 
 namespace PanMedix.Models
 {
@@ -11,6 +12,8 @@ namespace PanMedix.Models
         public string? PharmacyName { get; set; }
 
         public string ImagePath { get; set; } = null!;
+
+        public GuardianStatus GuardianStatus { get; set; } = GuardianStatus.NotGuardian;
 
         public string? GuardianId { get; set; }
         public User? Guardian { get; set; }
