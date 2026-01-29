@@ -35,8 +35,14 @@ public class GuardianService : IGuardianService
                 Status = g.GuardianStatus
             })
             .ToListAsync();
+
+        var totalGuardians = await _context.Users
+            .AsNoTracking()
+            .Where(u => u.GuardianStatus != GuardianStatus.NotGuardian)
+            .Select(u => u.Id)
+            .CountAsync();
         
-        return new PagedResult<GuardianViewModel>(page, pageSize, guardians);
+        return new PagedResult<GuardianViewModel>(page, pageSize, guardians, totalGuardians);
     }
 
     public async Task ResolveGuardianStatusAsync(bool isApproved)
