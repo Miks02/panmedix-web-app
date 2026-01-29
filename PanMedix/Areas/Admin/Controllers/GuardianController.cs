@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PanMedix.Enums;
+using PanMedix.Exceptions.Global;
 using PanMedix.Services.Interfaces;
 
 namespace PanMedix.Areas.Admin.Controllers;
@@ -30,5 +31,21 @@ public class GuardianController : Controller
         ViewBag.Status = status;
         
         return View(pagedResult);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateStatus(string userId, GuardianStatus status)
+    {
+        try
+        {
+            await _guardianService.ResolveGuardianStatusAsync(userId, status);
+        }
+        catch (EntityNotFoundException ex)
+        {
+            TempData["ErrorMessage"] = ex.Message;
+        }
+
+        return RedirectToAction("Index");
     }
 }
