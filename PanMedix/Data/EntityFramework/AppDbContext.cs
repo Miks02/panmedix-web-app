@@ -36,7 +36,7 @@ namespace PanMedix.Data.EntityFramework
 
             builder.Entity<User>()
                 .HasOne(u => u.Guardian)
-                .WithMany(g => g.Patients)
+                .WithMany(g => g.Wards)
                 .HasForeignKey(u => u.GuardianId)
                 .OnDelete(DeleteBehavior.Restrict);
 

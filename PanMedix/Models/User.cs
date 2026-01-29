@@ -17,12 +17,10 @@ namespace PanMedix.Models
 
         public string? GuardianId { get; set; }
         public User? Guardian { get; set; }
-
-        public bool IsGuardianApproved { get; set; }
         
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public ICollection<User> Patients { get; set; } = new List<User>();
+        public ICollection<User> Wards { get; set; } = new List<User>();
         public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
     }
 }
