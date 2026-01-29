@@ -23,11 +23,11 @@ public class GuardianService : IGuardianService
         int page, 
         int pageSize, 
         string search,
-        string filter = "all", 
+        GuardianStatus status, 
         string sort = "default"
 )
     {
-        var guardians = await BuildGuardiansQuery(page, pageSize, search, sort, filter)
+        var guardians = await BuildGuardiansQuery(page, pageSize, search, status, sort )
             .Select(g => new GuardianViewModel()
             {
                 Id = g.Id,
@@ -51,7 +51,7 @@ public class GuardianService : IGuardianService
         int page, 
         int pageSize, 
         string search,
-        string filter,
+        GuardianStatus? status,
         string sort)
     {
         var query = _context.Users
@@ -66,15 +66,18 @@ public class GuardianService : IGuardianService
             query = query.Where(w => EF.Functions.Like(w.FirstName, searchPattern));
         }
 
-        if (!string.IsNullOrWhiteSpace(filter))
+        if (status is not null)
         {
-            switch (filter)
+            switch (status)
             {
-                case "Approved":
+                case GuardianStatus.Approved:
                     query = query.Where(w => w.GuardianStatus == GuardianStatus.Approved);
                     break;
-                case "Pending":
+                case GuardianStatus.Pending:
                     query = query.Where(w => w.GuardianStatus == GuardianStatus.Pending);
+                    break;
+                case GuardianStatus.Denied:
+                    query = query.Where(w => w.GuardianStatus == GuardianStatus.Denied);
                     break;
                 default: 
                     query = query.Where(w => w.GuardianStatus != GuardianStatus.NotGuardian);
@@ -90,8 +93,11 @@ public class GuardianService : IGuardianService
                 case "wards":
                     query = query.OrderByDescending(w => w.Patients.Count);
                     break;
-                case "dateRegistered":
+                case "date":
                     query = query.OrderByDescending(w => w.CreatedAt);
+                    break;
+                default:
+                    query = query.OrderByDescending(w => w.FirstName);
                     break;
             }
         }
