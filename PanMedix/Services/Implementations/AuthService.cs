@@ -30,8 +30,7 @@ public class AuthService : IAuthService
             FirstName = request.FirstName,
             LastName = request.LastName,
             Email = request.Email,
-            UserName = request.Email,
-            IsGuardianApproved = false
+            UserName = request.Email
         };
 
         UserRole role = UserRole.User;
