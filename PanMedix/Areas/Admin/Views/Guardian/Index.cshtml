@@ -110,7 +110,7 @@
                 <tbody class="divide-y divide-cyan-50">
                 @foreach (var guardian in guardians)
                 {
-                   <tr class="hover:bg-cyan-50/30 transition-colors">
+                   <tr onclick="location.href='@Url.Action("Details", "Guardian", new { id = guardian.Id })'" class="hover:bg-cyan-50/30 transition-colors cursor-pointer">
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-100 to-cyan-200 flex items-center justify-center text-cyan-700 font-bold shadow-sm overflow-hidden">
@@ -154,9 +154,9 @@
                         @switch (guardian.Status)
                         {
                             case GuardianStatus.Approved:
-                                <button class="p-2 text-cyan-600 hover:bg-cyan-50 rounded-lg transition-colors" title="Detalji">
+                                <a asp-action="Details" asp-route-id="@guardian.Id" class="p-2 text-cyan-600 hover:bg-cyan-50 rounded-lg transition-colors inline-block" title="Detalji">
                                     <i class="fa-solid fa-eye"></i>
-                                </button>
+                                </a>
                                 break;
                             case GuardianStatus.Pending:
                                 <div class="flex justify-end items-center">
