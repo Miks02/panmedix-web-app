@@ -6,6 +6,6 @@ namespace PanMedix.Services.Interfaces;
 
 public interface IGuardianService
 {
-    Task<PagedResult<GuardianViewModel>> GetPagedGuardiansAsync(int page, int pageSize, string search, GuardianStatus status, string sort);
+    Task<PagedResult<GuardianViewModel>> GetPagedGuardiansAsync(int page, int pageSize, GuardianStatus status, string sort);
     Task ResolveGuardianStatusAsync(bool isApproved);
 }

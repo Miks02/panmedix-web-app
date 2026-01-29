@@ -19,15 +19,12 @@ public class GuardianService : IGuardianService
         _logger = logger;
     }
     
-    public async Task<PagedResult<GuardianViewModel>> GetPagedGuardiansAsync(
-        int page, 
-        int pageSize, 
-        string search,
-        GuardianStatus status, 
-        string sort = "default"
-)
+    public async Task<PagedResult<GuardianViewModel>> GetPagedGuardiansAsync(int page,
+        int pageSize,
+        GuardianStatus status,
+        string sort)
     {
-        var guardians = await BuildGuardiansQuery(page, pageSize, search, status, sort )
+        var guardians = await BuildGuardiansQuery(page, pageSize, status, sort )
             .Select(g => new GuardianViewModel()
             {
                 Id = g.Id,
@@ -50,7 +47,6 @@ public class GuardianService : IGuardianService
     private IQueryable<User> BuildGuardiansQuery(
         int page, 
         int pageSize, 
-        string search,
         GuardianStatus? status,
         string sort)
     {
@@ -59,13 +55,7 @@ public class GuardianService : IGuardianService
             .OrderBy(w => w.CreatedAt)
             .Where(w => w.GuardianStatus != GuardianStatus.NotGuardian)
             .AsQueryable();
-
-        if (!string.IsNullOrEmpty(search))
-        {
-            string searchPattern = $"%{search}%";
-            query = query.Where(w => EF.Functions.Like(w.FirstName, searchPattern));
-        }
-
+        
         if (status is not null)
         {
             switch (status)
