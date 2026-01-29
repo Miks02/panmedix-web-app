@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using PanMedix.Data.EntityFramework;
 using PanMedix.DTO.Global;
 using PanMedix.Enums;
+using PanMedix.Exceptions.Global;
 using PanMedix.Models;
 using PanMedix.Services.Interfaces;
 using PanMedix.ViewModels;
@@ -45,9 +46,17 @@ public class GuardianService : IGuardianService
         return new PagedResult<GuardianViewModel>(page, pageSize, guardians, totalGuardians);
     }
 
-    public async Task ResolveGuardianStatusAsync(bool isApproved)
+    public async Task ResolveGuardianStatusAsync(string userId, GuardianStatus status)
     {
-        throw new NotImplementedException();
+        var guardian = await _context.Users
+            .Where(u => u.Id == userId)
+            .FirstOrDefaultAsync();
+
+        if (guardian is null)
+            throw new EntityNotFoundException("Staratelj nije pronadjen");
+
+        guardian.GuardianStatus = status;
+        await _context.SaveChangesAsync();
     }
 
     private IQueryable<User> BuildGuardiansQuery(
