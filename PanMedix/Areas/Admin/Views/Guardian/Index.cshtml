@@ -1,13 +1,14 @@
+@using Microsoft.AspNetCore.Mvc.RazorPages
 @using PanMedix.DTO.Global
 @using PanMedix.Enums
 @using PanMedix.ViewModels
+@using PanMedix.Helpers;
 
 @model PagedResult<GuardianViewModel>
 
 @{
     ViewBag.Title = "Upravljanje Starateljima";
     Layout = "_Dashboard";
-
     var guardians = Model.Items;
     var areGuardiansPresent = guardians.Count > 0;
 }
@@ -25,40 +26,63 @@
             @if (areGuardiansPresent)
             {
                 <div class="flex flex-wrap items-center gap-3 mb-4">
-                <div class="relative">
-                    <select class="appearance-none pl-10 pr-10 py-2.5 bg-cyan-50 border border-cyan-200 text-cyan-900 text-sm rounded-xl focus:ring-cyan-500 focus:border-cyan-500 block w-full outline-none">
-                        <option value="all">Svi staratelji</option>
-                        <option value="approved">Odobreni</option>
-                        <option value="pending">Na čekanju</option>
-                    </select>
-                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-cyan-600">
-                        <i class="fa-solid fa-filter"></i>
+                    <div class="relative">
+                        <form asp-action="Index" method="GET">
+                            <select name="status" onchange="this.form.submit()" class="appearance-none pl-10 pr-10 py-2.5 bg-cyan-50 border border-cyan-200 text-cyan-900 text-sm rounded-xl focus:ring-cyan-500 focus:border-cyan-500 block w-full outline-none">
+                                <option value="">Svi staratelji</option>
+                                @foreach (GuardianStatus status in Enum.GetValues(typeof(GuardianStatus)))
+                                {
+                                    if (ViewBag.Status != null && ViewBag.Status.ToString() == status.ToString() && status != GuardianStatus.NotGuardian)
+                                    {
+                                        <option value="@status" selected>@status.GetDisplayName()</option>
+                                    }
+                                    else if(status != GuardianStatus.NotGuardian)
+                                    {
+                                        <option value="@status">@status.GetDisplayName()</option>
+                                    }
+                                }
+                            </select>
+                        </form>
+                        
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-cyan-600">
+                            <i class="fa-solid fa-filter"></i>
+                        </div>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-cyan-600">
+                            <i class="fa-solid fa-chevron-down text-xs"></i>
+                        </div>
                     </div>
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-cyan-600">
-                        <i class="fa-solid fa-chevron-down text-xs"></i>
-                    </div>
-                </div>
 
-                <div class="relative">
-                    <select class="appearance-none pl-10 pr-10 py-2.5 bg-cyan-50 border border-cyan-200 text-cyan-900 text-sm rounded-xl focus:ring-cyan-500 focus:border-cyan-500 block w-full outline-none">
-                        <option value="name">Sortiraj po imenu</option>
-                        <option value="wards">Sortiraj po broju štićenika</option>
-                        <option value="date">Sortiraj po datumu prijave</option>
-                    </select>
-                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-cyan-600">
-                        <i class="fa-solid fa-sort"></i>
+                    <div class="relative">
+                        <form asp-action="Index" method="GET">
+                            <select name="sort" onchange="this.form.submit()" class="appearance-none pl-10 pr-10 py-2.5 bg-cyan-50 border border-cyan-200 text-cyan-900 text-sm rounded-xl focus:ring-cyan-500 focus:border-cyan-500 block w-full outline-none">
+                                @if (ViewBag.Sort is not null)
+                                {
+                                    @switch (ViewBag.Sort)
+                                    {
+                                        case "name":
+                                            <option selected disabeld hidden>Sortiraj po imenu</option>
+                                            break;
+                                        case "wards":
+                                            <option selected disabeld hidden>Sortiraj po broju štićenika</option>
+                                            break;
+                                        case "date":
+                                            <option selected disabeld hidden>Sortiraj po datumu prijave</option>
+                                            break;
+                                    }
+                                }
+                                <option value="name">Sortiraj po imenu</option>
+                                <option value="wards">Sortiraj po broju štićenika</option>
+                                <option value="date">Sortiraj po datumu prijave</option>
+                            </select>
+                        </form>
+                        
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-cyan-600">
+                            <i class="fa-solid fa-sort"></i>
+                        </div>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-cyan-600">
+                            <i class="fa-solid fa-chevron-down text-xs"></i>
+                        </div>
                     </div>
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-cyan-600">
-                        <i class="fa-solid fa-chevron-down text-xs"></i>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex flex-wrap items-center gap-3 mb-4">
-                <input type="text" placeholder="Pretraži staratelje..." class="w-full pl-10 pr-4 py-2.5 bg-cyan-50 border border-cyan-200 text-cyan-900 text-sm rounded-xl focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all">
-                <div class="absolute inset-y-0 left-0 flex items-center pl-3 text-cyan-600">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </div>
             </div>
             }
             
@@ -91,7 +115,7 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-100 to-cyan-200 flex items-center justify-center text-cyan-700 font-bold shadow-sm overflow-hidden">
-                                <img src="https://ui-avatars.com/api/?name=Nikola+Petrovic&background=cffafe&color=0891b2&bold=true" alt="Avatar" class="w-full h-full object-cover">
+                                <img src="https://ui-avatars.com/api/?background=random&name=@(guardian.FirstName)+@(guardian.LastName)" alt="Avatar" class="w-full h-full object-cover">
                             </div>
                             <div>
                                 <div class="font-bold text-cyan-900">@guardian.FirstName @guardian.LastName</div>
@@ -157,39 +181,7 @@
                     
                 </tr> 
                 }
-                
 
-
-                <tr class="hover:bg-cyan-50/30 transition-colors">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-100 to-amber-200 flex items-center justify-center text-amber-700 font-bold shadow-sm overflow-hidden">
-                                <img src="https://ui-avatars.com/api/?name=Ana+Ivic&background=fef3c7&color=d97706&bold=true" alt="Avatar" class="w-full h-full object-cover">
-                            </div>
-                            <div>
-                                <div class="font-bold text-cyan-900">Ana Ivić</div>
-                                <div class="text-xs text-cyan-600 font-medium">ana.ivic@gmail.com</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 text-center whitespace-nowrap">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-bold ring-1 ring-inset ring-amber-600/20">
-                            <span class="w-1.5 h-1.5 rounded-full bg-amber-600 animate-pulse"></span>
-                            Na čekanju
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 text-center whitespace-nowrap font-bold text-cyan-400">
-                        0
-                    </td>
-                    <td class="px-6 py-4 text-right whitespace-nowrap">
-                        <button class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold rounded-lg transition-all shadow-md shadow-cyan-100">
-                            Odobri
-                        </button>
-                        <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors ml-2" title="Odbij">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                    </td>
-                </tr>
                 </tbody>
             </table>
             }
@@ -199,14 +191,40 @@
         @if (areGuardiansPresent)
         {
             <div class="mt-8 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-cyan-50 pt-6">
-                <p class="text-sm text-cyan-600">Prikazano 1-4 od ukupno 24 staratelja</p>
-                <div class="flex gap-2">
-                    <button class="px-4 py-2 border border-cyan-200 rounded-xl text-sm font-semibold text-cyan-700 hover:bg-cyan-50 transition-colors disabled:opacity-50">Prethodna</button>
-                    <button class="px-4 py-2 bg-cyan-600 text-white rounded-xl text-sm font-semibold hover:bg-cyan-700 transition-colors shadow-md shadow-cyan-100">1</button>
-                    <button class="px-4 py-2 border border-cyan-200 rounded-xl text-sm font-semibold text-cyan-700 hover:bg-cyan-50 transition-colors">2</button>
-                    <button class="px-4 py-2 border border-cyan-200 rounded-xl text-sm font-semibold text-cyan-700 hover:bg-cyan-50 transition-colors">3</button>
-                    <button class="px-4 py-2 border border-cyan-200 rounded-xl text-sm font-semibold text-cyan-700 hover:bg-cyan-50 transition-colors">Sledeća</button>
-                </div>
+                <p class="text-sm text-cyan-600">Prikazano @Model.PaginatedCount od @Model.TotalCount staratelja</p>
+                @if (Model.TotalPages > 1)
+                {
+                    <div class="flex gap-2">
+                        <form asp-action="Index" method="GET">
+                            <input type="hidden" name="page" value="@(Model.Page - 1)">
+
+                            <button type="submit" disabled="@(Model.Page == 1)" class="disabled:pointer-events-none px-4 py-2 border border-cyan-200 rounded-xl text-sm font-semibold text-cyan-700 hover:bg-cyan-50 transition-colors disabled:opacity-50">Prethodna</button>
+                        </form>
+
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <form asp-action="Index" method="GET">
+                                <input type="hidden" name="page" value="@i">
+                                <button
+                                    disabled="@(Model.Page == i)"
+                                    type="submit"
+                                    class="disabled:opacity-70 disabled:pointer-events-none px-4 py-2 bg-cyan-600 text-white rounded-xl text-sm font-semibold hover:bg-cyan-700 transition-colors shadow-md shadow-cyan-100">
+                                    @i
+                                </button>
+                            </form>
+
+                        }
+                        <form asp-action="Index" method="GET">
+                            <input type="hidden" name="page" value="@(Model.Page + 1)">
+
+                            <button disabled="@(Model.Page == (int)Model.TotalPages)" class="disabled:opacity-50 disabled:pointer-events-none px-4 py-2 border border-cyan-200 rounded-xl text-sm font-semibold text-cyan-700 hover:bg-cyan-50 transition-colors">Sledeća</button>
+                        </form>
+
+                    </div>
+                    
+                }
+                
+                
             </div>
         }
         

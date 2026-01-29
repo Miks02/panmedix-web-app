@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PanMedix.Enums;
 using PanMedix.Services.Interfaces;
 
 namespace PanMedix.Areas.Admin.Controllers;
@@ -16,9 +17,17 @@ public class GuardianController : Controller
     }
     
     [HttpGet]
-    public async Task<IActionResult> Index(string search, string sort, string filter, int page = 1, int pageSize = 10)
+    public async Task<IActionResult> Index(
+        GuardianStatus status,
+        string sort = "name",
+        int page = 1, 
+        int pageSize = 10
+        )
     {
-        var pagedResult = await _guardianService.GetPagedGuardiansAsync(page, pageSize, search, filter, sort);
+        var pagedResult = await _guardianService.GetPagedGuardiansAsync(page, pageSize, status, sort);
+
+        ViewBag.Sort = sort;
+        ViewBag.Status = status;
         
         return View(pagedResult);
     }
