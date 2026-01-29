@@ -48,4 +48,12 @@ public class GuardianController : Controller
 
         return RedirectToAction("Index");
     }
+
+    [HttpGet]
+    public async Task<IActionResult> Details(string id)
+    {
+        var guardian = await _guardianService.GetGuardianByIdAsync(id);
+        
+        return View(guardian);
+    }
 }

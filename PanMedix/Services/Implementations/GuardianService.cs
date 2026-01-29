@@ -19,7 +19,29 @@ public class GuardianService : IGuardianService
         _context = context;
         _logger = logger;
     }
-    
+
+    public async Task<GuardianViewModel> GetGuardianByIdAsync(string userId)
+    {
+        var guardian = await _context.Users
+            .AsNoTracking()
+            .Where(g => g.Id == userId)
+            .Select(g => new GuardianViewModel()
+            {
+                Id = g.Id,
+                FirstName = g.FirstName,
+                LastName = g.LastName,
+                Email = g.Email!,
+                NumberOfWards = g.Wards.Count,
+                Status = g.GuardianStatus
+            })
+            .FirstOrDefaultAsync();
+
+        if (guardian is null)
+            throw new EntityNotFoundException("Staratelj nije pronadjen");
+
+        return guardian;
+    }
+
     public async Task<PagedResult<GuardianViewModel>> GetPagedGuardiansAsync(int page,
         int pageSize,
         GuardianStatus status,
@@ -32,7 +54,7 @@ public class GuardianService : IGuardianService
                 FirstName = g.FirstName,
                 LastName = g.LastName,
                 Email = g.Email!,
-                NumberOfWards = g.Patients.Count,
+                NumberOfWards = g.Wards.Count,
                 Status = g.GuardianStatus
             })
             .ToListAsync();
@@ -49,12 +71,15 @@ public class GuardianService : IGuardianService
     public async Task ResolveGuardianStatusAsync(string userId, GuardianStatus status)
     {
         var guardian = await _context.Users
-            .Where(u => u.Id == userId)
             .FirstOrDefaultAsync();
-
+        
         if (guardian is null)
             throw new EntityNotFoundException("Staratelj nije pronadjen");
-
+        
+        await _context.Users
+            .Where(u => u.GuardianId == userId)
+            .ExecuteUpdateAsync(u => u.SetProperty(w => w.GuardianId, (string?)null));
+        
         guardian.GuardianStatus = status;
         await _context.SaveChangesAsync();
     }
@@ -96,7 +121,7 @@ public class GuardianService : IGuardianService
             switch (sort)
             {
                 case "wards":
-                    query = query.OrderByDescending(w => w.Patients.Count);
+                    query = query.OrderByDescending(w => w.Wards.Count);
                     break;
                 case "date":
                     query = query.OrderByDescending(w => w.CreatedAt);
