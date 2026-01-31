@@ -62,7 +62,7 @@ public class AuthController : Controller
         }
 
         if (User.IsInRole("Admin"))
-            return RedirectToAction("Index", "Statistics");
+            return RedirectToAction("Index", "Statistics", new {area = "Admin"});
 
         return RedirectToAction("Index", "Profile");
     }
